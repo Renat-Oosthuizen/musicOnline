@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Music Online - Login</title>
+        <meta name="description" content="musicOnline.com.">
+		<link rel="stylesheet" href="style.css"> <!--Links the CSS file.-->
+    </head>
+    
+    <body>
+        
+		<br>
+		<br>
+	
+        <div>
+
+            <div>
+                <img src="logoMusicOnline.png" alt="Logo" class="logo">
+            </div>
+
+            <!--Form-->
+            <div>
+
+                <form action="login.php" method="post"> <!-- form will post contents to login.php-->
+                    <br>
+
+                    <label for="email">Email:</label><br> <!-- "for" links to input id-->
+                    <br>
+
+                    <input type="email" placeholder="Enter Email" name="email" id="email" required><br><br>
+                    <label for="password">Password:</label><br>
+                    <br>
+
+                    <input type="password" placeholder="Enter Password" name="password" id="password" required><br><br>
+
+                    <button type="submit">Login</button><br> <!--Login button will submit form-->
+                </form>
+
+                <p><span id="errorText2"></span></p> <!--Displays error messages-->
+
+                <div class="my-padding-64">
+                    <spam style="color: white">Don't have an account? </spam><a href="registration.html">Sign Up Now</a> <!--Takes user to registration page-->
+                </div>
+
+            </div>
+
+        </div>
+		
+        <!--Copyright footer-->
+        <footer>
+            <p>Copyright &copy; 2021 MusicOnline</p>
+        </footer>
+
+    <script>
+
+        //If there is no acceptCookie then notify user of cookies.
+        if (getCookie('acceptCookie') != "true")
+        {
+            cookieNotice();
+        }
+
+        //Inform the user if the account was successfully created.
+        if (getCookie('newAccount') == "true")
+        {
+            alert("Account created successfully!");
+        }
+
+        //Send the error cookie value to the html error message.
+        document.getElementById("errorText2").textContent = getCookie('error');
+
+        //This function will return the value of the cookie.
+        function getCookie(cname) 
+        {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for(var i = 0; i <ca.length; i++) 
+            {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') 
+                {
+                  c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) 
+                {
+                  return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        //Inform user that website uses cookies.
+        async function cookieNotice()
+        {
+            var notify;  //Stores user's responce to the use of cookies.
+
+            await sleep(4000); //Wait for 4 seconds before continuing
+
+            notify = confirm("This website uses cookies. If you do not agree to the use of cookies, click Cancel and leave the website."); //Produces a confirm dialogue box notifying user of cookies.
+
+            if (notify == true)  //If user accepts, then store the acceptCookie.
+            {
+                document.cookie = "acceptCookie=true; max-age=31536000; path=/"; //Cookie remembers if user aggreed to cookies. Cookie expires in 1 year.
+            } 
+
+        }
+        
+        //Function that waits for an ammount of time (milliseconds).
+        function sleep(time) 
+        {
+            return new Promise(resolve => {setTimeout(() => {resolve();}, time);});
+        }
+
+    </script>
+
+    </body>
+    
+</html>

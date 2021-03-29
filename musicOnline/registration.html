@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Music Online - Registration</title>
+        <meta name="description" content="musicOnline.com.">
+        <link rel="stylesheet" href="style.css"> <!--Links the CSS file.-->
+    </head>
+    
+    <body>
+       
+		<br>
+		<br>
+		
+        <div>
+            <div>
+                <img src="logoMusicOnline.png" alt="Logo" class="logo">
+            </div>
+
+            <!--Form-->
+            <div>
+
+                <form action="registration.php" onsubmit="return !!( verifyPass() && verifyAge() && checkAccount());" method="post"> <!--Form will post data to registration.php if the three JS functions all return true-->
+
+                    <div class="radioContainer">
+                        <label>Please select account type:</label><br><br>
+                        <input type="radio" name="account" id="account1" value="yes">
+                        <label for="account1">Retailer</label>
+                        <input type="radio" name="account" id="account2" value="no" checked>
+                        <label for="account2">Standard</label><br><br>
+                    </div>
+
+                    <label for="email">Email:</label><br><br> <!-- "for" links to input id-->
+                    <input type="email" placeholder="Enter Email" name="email" id="email" size="30" required><br><br>
+                    <label for="phoneNumber">Phone Number:</label><br><br> <!-- "for" links to input id-->
+                    <input type="tel" placeholder="Enter Phone Number" name="phoneNumber" id="phoneNumber" size="30" required><br><br>
+                    <label for="password">Password:</label><br><br> <!-- "for" links to input id-->
+                    <input type="password" placeholder="Enter Password" name="password" id="password" size="30" required><br><br>
+                    <label for="repeatPassword">Repeat Password:</label><br><br> <!-- "for" links to input id-->
+                    <input type="password" placeholder="Enter Password" name="repeatPassword" id="repeatPassword"  size="30" required><br><br>
+
+                    <label>Birthday:</label><br><br> <!-- "for" links to input id-->
+                    <input type="text" placeholder="    DD" name="day" id="day" pattern="[0-3][0-9]" maxlength="2" size="6" required> 
+                    <input type="text" placeholder="    MM" name="month" id="month" pattern="[0-1][0-9]" maxlength="2" size="6" required> 
+                    <input type="text" placeholder="  YYYY" name="year" id="year" pattern="[0-9]{4}" maxlength="4" size="6" required><br><br> 
+
+                    <button type="submit">Register</button><br><br> <!--Registre button will submit form-->
+                </form>
+
+                <p><span id="errorText"></span></p> <!--Paragraph used to inform user that account creation was cancelled-->
+
+                <div class="my-padding-64">
+                    <span><a href="index.html">Back to Login</a></span> <!--Takes user to registration page.-->
+                </div>
+
+            </div>
+
+        </div>
+	
+        <!--Copyright footer-->
+        <footer>
+            <p>Copyright &copy; 2021 MusicOnline</p>
+        </footer>
+        
+        <script>
+            
+            //Send the error cookie value to the html error message.
+            document.getElementById("errorText").textContent = getCookie('error');
+            
+            //This function will return the value of the cookie.
+            function getCookie(cname) 
+            {
+                var name = cname + "=";
+                var decodedCookie = decodeURIComponent(document.cookie);
+                var ca = decodedCookie.split(';');
+                for(var i = 0; i <ca.length; i++) 
+                {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') 
+                    {
+                      c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) 
+                    {
+                      return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+            }
+            
+            function verifyPass() //Function used to verify that passwords match
+            {
+                var pass1 = document.getElementById('password').value; //Stores initial password
+                var pass2 = document.getElementById('repeatPassword').value; //Stores repeat password
+                
+                if (pass1 == pass2)
+                    {
+                        return true;
+                    }
+                else
+                    {
+                        document.cookie = "error=Error: Passwords do not match.; max-age=3; path=/";  //Create an error cookie with an error message. Cookie expires in 3 seconds.
+                        document.getElementById("errorText").textContent = getCookie('error'); //Displays the message in the error cookie.
+                        return false;
+                    }
+            }
+            
+            function verifyAge()  //Checks that the user is over 18 years old
+            {
+                var day = document.getElementById('day').value; //Birth day of user - aquired from html id
+                var month = document.getElementById('month').value; //Birth month of user - aquired from html id
+                var year = document.getElementById('year').value; //Birth year of user - aquired from html id
+                var userBirthDate = new Date(year + "-" + month + "-" + day + "Z"); //Convert entered data into a birth date
+                
+                //Verify that input is valid format/not empty
+                
+                userBirthDate = userBirthDate.setFullYear(userBirthDate.getFullYear() + 18); //Add 18 to user's birth date
+                
+                if (new Date(userBirthDate) >= Date.now())
+                    {
+                        document.cookie = "error=Error: You must be 18 or older to make an account on this website.; max-age=3; path=/"; //Create an error cookie with an error message. Cookie expires in 3 seconds.
+                        document.getElementById("errorText").textContent = getCookie('error'); //Displays the message in the error cookie.
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+            }
+            
+            function checkAccount() //Checks if the user wants a retailer account
+            {
+                var radios = document.getElementsByName('account'); //Radio menu values
+                var retailerAccount; //Stores the value of the accountType
+                
+                for (var i = 0; i < 2; i++)
+                {
+                    if (radios[i].checked)
+                    {
+                        retailerAccount = radios[i].value;
+                                
+                        break; //Only one radio can be checked so no need to keep going if it is the first one.
+                    }
+                }
+
+                
+                if (retailerAccount == "yes")
+                    {
+                        var payFee = confirm("Please pay a fee to activate your Retailer account.");
+                        
+                        if (payFee == true) 
+                        {
+                            return true; //Triggers form action.
+                        } 
+                        else 
+                        {
+                            document.cookie = "error=Error: Account creation was cancelled.; max-age=3; path=/"; //Create an error cookie with an error message. Cookie expires in 3 seconds.
+                            document.getElementById("errorText").textContent = getCookie('error'); //Displays the message in the error cookie.
+                            return false;
+                            
+                        }
+
+                    }
+                
+                else
+                {
+                    return true; //Triggers form action.
+                }
+            }
+            
+        </script>
+        
+    </body>
+    
+</html>

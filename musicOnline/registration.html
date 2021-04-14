@@ -69,7 +69,7 @@
         <script>
             
             //Send the error cookie value to the html error message.
-            document.getElementById("errorText").textContent = getCookie('error');
+            document.getElementById("errorText").textContent = getCookie('error').replaceAll("+", " ");
             
             //This function will return the value of the cookie.
             function getCookie(cname) 
